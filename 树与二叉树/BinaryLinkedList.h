@@ -12,9 +12,6 @@ typedef struct BiNode{
     struct BiNode * rchild;     //右孩子（指针域）
 }BiNode;
 
-typedef struct BinaryLinkedList{
-
-};
 //以b为根节点，创建二叉树
 void CreateBinaryLinkedList(BiNode * b);
 //以下3个函数是CreateBinaryLinkedList的子函数，用来配合它使用的
@@ -24,10 +21,13 @@ void PostCreate(BiNode * b);    //后序创建
 
 //以某种顺序遍历二叉树
 void TraverseBinaryTree(BiNode *b);
-//以下3个函数是TraverseBinaryTree的子函数.
+//以下6个函数是TraverseBinaryTree的子函数.
 void PreOrderTraverse(BiNode *b);    //前序遍历
 void InOrderTraverse(BiNode *b);     //中序遍历
 void PostOrderTraverse(BiNode *b);   //后序遍历
 
+void InOrderTraverse_Re(BiNode *b);     //中序遍历的非递归算法
+void PreOrderTraverse_Re(BiNode *b);    //前序遍历的非递归算法
+void PostOrderTraverse_Re(BiNode *b);   //后序遍历的非递归算法    注意 这里有坑。后序遍历的非递归算法比较复杂。暂不实现
 
 #endif // BINARYLINKEDLIST_H_INCLUDED

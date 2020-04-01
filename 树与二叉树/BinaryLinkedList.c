@@ -1,4 +1,5 @@
 #include "BinaryLinkedList.h"
+#include "LinkedStack.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -93,7 +94,7 @@ void PostCreate(BiNode * b){
 
 //以下是遍历算法
 void TraverseBinaryTree(BiNode *b){
-    printf("请选择遍历方式（前序遍历输入1，中序遍历输入2，后序遍历输入3）：\n");
+    printf("请选择遍历方式（前序遍历输入1，中序遍历输入2，后序遍历输入3\n前序非递归遍历输入4，中序非递归遍历输入5，后序非递归遍历输入6）：\n");
     int a;
     scanf("%d", &a);
     //开始遍历二叉树
@@ -110,6 +111,18 @@ void TraverseBinaryTree(BiNode *b){
     else if(a == 3){
         printf("开始后序遍历二叉树\n");
         PostOrderTraverse(b);
+    }
+    else if(a == 4){
+        printf("开始前序非递归遍历二叉树\n");
+        PreOrderTraverse_Re(b);
+    }
+    else if(a == 5){
+        printf("开始中序非递归遍历二叉树\n");
+        InOrderTraverse_Re(b);
+    }
+    else if(a == 6){
+        printf("开始后序非递归遍历二叉树\n");
+        PostOrderTraverse_Re(b);
     }
 
     else{
@@ -138,4 +151,66 @@ void PostOrderTraverse(BiNode *b){
     PostOrderTraverse(b->lchild);
     PostOrderTraverse(b->rchild);
     printf("%d\t%s\n",b->data.id,b->data.name);
+}
+
+
+void InOrderTraverse_Re(BiNode *b){
+    //中序遍历的非递归算法
+    //王道考研数据结构 以中序遍历为例讲解算法思想。那么就先实现非递归的中序遍历。
+    //算法思想：
+        //1.初始时扫描根结点进栈，并扫描根结点的所有左侧结点并将它们一一进栈
+        //2.出栈一个结点，访问它（在这里是打印它）
+        //3.扫描该节点的右孩子结点将其进栈（只扫描它的右孩子！不是所有）
+        //4.依次扫描右孩子结点的左侧结点并将它们一一进栈（其实就是第1步的重复。将右孩子结点看作了根结点）
+        //5.反复该过程直到栈空为止。
+
+    LinkedStack *s = (LinkedStack*)malloc(sizeof(LinkedStack));     //创建一个链栈
+    InitLinkedStack(s);
+    BiNode * temp = b;          //创建一个中间变量保存形参方便后续操作
+    while(temp != NULL || s->length != 0){  //只要结点存在或者栈非空，那么就继续循环
+        if(temp != NULL){
+            Push(s,*temp);                  //第一步：让根节点进栈
+            temp = temp->lchild;                    //通过循环让根节点的左孩子们进栈
+        }
+        else{                               //else代表结点空了
+            BiNode * t = (BiNode*)malloc(sizeof(BiNode));
+            Pop(s,t);                   //注意 这里不是将空结点扔出去。空结点根本就没有进栈
+                                        //    这里是出栈一个真实的结点。
+                                        //出栈真实的那个结点，存在了临时变量t里面
+
+            printf("%d\t%s\n",t->data.id,t->data.name);
+            temp = t->rchild;           //用一个临时变量t保存该结点，然后将temp赋值给t的右孩子
+            free(t);                    //用完空间之后记得释放，并且将指针置空。避免产生野指针
+            t = NULL;
+        }
+    }
+    free(s);
+
+}
+void PreOrderTraverse_Re(BiNode *b){    //前序遍历的非递归算法
+
+    //和中序遍历差不多。就是代码顺序有改变 我把注释都删了
+
+    LinkedStack *s = (LinkedStack*)malloc(sizeof(LinkedStack));
+    InitLinkedStack(s);
+    BiNode * temp = b;
+    while(temp != NULL || s->length != 0){
+        if(temp != NULL){
+            printf("%d\t%s\n",temp->data.id,temp->data.name);     //和中序遍历不同顺序。这里是先打印
+            Push(s,*temp);
+            temp = temp->lchild;
+        }
+        else{
+            BiNode * t = (BiNode*)malloc(sizeof(BiNode));
+            Pop(s,t);
+            temp = t->rchild;
+            free(t);
+            t = NULL;
+        }
+    }
+    free(s);
+}
+void PostOrderTraverse_Re(BiNode *b){   //后序遍历的非递归算法  注意 这里有坑。后序遍历的非递归算法比较复杂。暂不实现
+
+    ;
 }
